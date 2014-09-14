@@ -1,37 +1,36 @@
 package io.github.jayin.sudoku.core;
-
 import io.github.jayin.sudoku.core.Table.PendingNode;
 
 import java.util.List;
 
 /**
- * Êı¶À <strong>Usage</strong>
- * TODO ¸ù¾İ¸ø³öµÄÄÑ¶È,×Ô¶¯Éú³ÉÒ»¸öÊı¶À¾ØÕó
+ * æ•°ç‹¬ <strong>Usage</strong>
+ * TODO æ ¹æ®ç»™å‡ºçš„éš¾åº¦,è‡ªåŠ¨ç”Ÿæˆä¸€ä¸ªæ•°ç‹¬çŸ©é˜µ
  * <pre>
- *  //½â
+ *  //è§£
  * Sudoku sudoku = new Sudoku();
  * sudoku.init(cur_Matrix).solve();
  * </pre>
  * <pre>
- * 	 //¼ì²é¾ØÕó
+ * 	 //æ£€æŸ¥çŸ©é˜µ
  *   new Sudoku.check(cur_Matrix);
  * </pre>
- * <p>ÊµÏÖË¼Â·</p>
- * <p>1.¼ÆËã³öÃ¿ĞĞ£¬Ã¿ÁĞ£¬Ã¿Ä£¿éµÄ´ıÌîÁĞ±í</p>
- * <p>2.¶Ô´ıÌîÁĞ±íÅÅĞò£¬´ıÌîÊı½ÏÉÙµÄÅÅÔÚÇ°Ãæ</p>
- * <p>3.´ıÌîÊıÎª1µÄ£¬Ö±½ÓÌîÉÏ</p>
+ * <p>å®ç°æ€è·¯</p>
+ * <p>1.è®¡ç®—å‡ºæ¯è¡Œï¼Œæ¯åˆ—ï¼Œæ¯æ¨¡å—çš„å¾…å¡«åˆ—è¡¨</p>
+ * <p>2.å¯¹å¾…å¡«åˆ—è¡¨æ’åºï¼Œå¾…å¡«æ•°è¾ƒå°‘çš„æ’åœ¨å‰é¢</p>
+ * <p>3.å¾…å¡«æ•°ä¸º1çš„ï¼Œç›´æ¥å¡«ä¸Š</p>
  * 
  * @author Jayin
  * 
  */
 public class Sudoku {
-	/** Êı¶À±í */
+	/** æ•°ç‹¬è¡¨ */
 	Table table;
-	/** ´ıÌîµã */
+	/** å¾…å¡«ç‚¹ */
 	List<PendingNode> pendingNodes;
-	/** ´ıÌîµã */
+	/** å¾…å¡«ç‚¹ */
 	boolean debug = false;
-	/** ÆğÊ¼Ê±¼ä */
+	/** èµ·å§‹æ—¶é—´ */
 	long time_start;
 
 	public Sudoku() {
@@ -39,7 +38,7 @@ public class Sudoku {
 	}
 
 	/**
-	 * ÊÇ·ñ¿ªÆôµ÷ÊÔÄ£Ê½
+	 * æ˜¯å¦å¼€å¯è°ƒè¯•æ¨¡å¼
 	 * 
 	 * @param debug
 	 */
@@ -49,15 +48,15 @@ public class Sudoku {
 	}
 
 	/**
-	 * ¼ì²éÊı¶ÀÊÇ·ñÕıÈ·
+	 * æ£€æŸ¥æ•°ç‹¬æ˜¯å¦æ­£ç¡®
 	 * 
 	 * @param cur_table
 	 * @return true if it's correct
 	 */
 	public boolean check(int[][] cur_table) {
 		try {
-			for (int i = 1; i <= Table.ROW; i++)
-				for (int j = 1; j <= Table.ROW; j++)
+			for (int i = 0; i < Table.ROW; i++)
+				for (int j = 0; j < Table.ROW; j++)
 					if (cur_table[i][j] == 0) {
 						return false;
 					}
@@ -70,7 +69,7 @@ public class Sudoku {
 	}
 
 	/**
-	 * µ¼ÈëÊı¶À
+	 * å¯¼å…¥æ•°ç‹¬
 	 * 
 	 * @param cur_Matrix
 	 * @return
@@ -91,34 +90,34 @@ public class Sudoku {
 	}
 
 	/**
-	 * ¿ªÊ¼½â´ğ
+	 * å¼€å§‹è§£ç­”
 	 */
 	public void solve() {
 		solve(0);
 	}
 
 	/**
-	 * ´ÓµÚÒ»´ıÌîµã¿ªÊ¼½â´ğ
+	 * ä»ç¬¬ä¸€å¾…å¡«ç‚¹å¼€å§‹è§£ç­”
 	 * 
 	 * @param cur
 	 */
 	private void solve(int cur) {
 		if (cur == pendingNodes.size()) {
 			if (debug)
-				System.out.println("ºÄÊ±: "
+				System.out.println("è€—æ—¶: "
 						+ (System.currentTimeMillis() - time_start) / 1000.0
 						+ " s");
 			int[][] result = table.getCurTable();
 			if (check(result)) {
 				// print
-				for (int i = 1; i <= Table.ROW; i++) {
-					for (int j = 1; j < Table.ROW; j++) {
+				for (int i = 0; i < Table.ROW; i++) {
+					for (int j = 0; j < Table.ROW; j++) {
 						System.out.print(result[i][j] + " ");
 					}
 					System.out.println();
 				}
 			} else {
-				System.out.println("Êı¶À½â´ğ²»ÕıÈ·");
+				System.out.println("æ•°ç‹¬è§£ç­”ä¸æ­£ç¡®");
 			}
 
 		} else {

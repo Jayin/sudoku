@@ -7,71 +7,70 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 /**
- * Êı¶À±í
+ * æ•°ç‹¬è¡¨
  * @author Jayin
  *
  */
 public class Table {
-	/** ĞĞ */
+	/** è¡Œ */
 	public final static int ROW = 9;
-	/** Ä£¿éid */
+	/** æ¨¡å—id */
 	private int[][] module =
 		{
-			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-			{ 0, 1, 1, 1, 2, 2, 2, 3, 3, 3 },
-			{ 0, 1, 1, 1, 2, 2, 2, 3, 3, 3 },
-			{ 0, 1, 1, 1, 2, 2, 2, 3, 3, 3 },
-			{ 0, 4, 4, 4, 5, 5, 5, 6, 6, 6 },
-			{ 0, 4, 4, 4, 5, 5, 5, 6, 6, 6 },
-			{ 0, 4, 4, 4, 5, 5, 5, 6, 6, 6 },
-			{ 0, 7, 7, 7, 8, 8, 8, 9, 9, 9 },
-			{ 0, 7, 7, 7, 8, 8, 8, 9, 9, 9 },
-			{ 0, 7, 7, 7, 8, 8, 8, 9, 9, 9 }, };
-	/** µ±Ç°Êı¶ÀµÄ¾ØÕó */
-	private int[][] cur_table = new int[ROW + 1][ROW + 1];
-	/** ĞĞ×´Ì¬ */
-	private boolean[][] row = new boolean[ROW + 1][ROW + 1];
-	/** ÁĞ×´Ì¬ */
-	private boolean[][] column = new boolean[ROW + 1][ROW + 1];
-	/** ¿é×´Ì¬ */
-	private boolean[][] block = new boolean[ROW + 1][ROW + 1];
-	/** Î´Ìî¿Õ¸ñÁĞ±í */
+			{  1, 1, 1, 2, 2, 2, 3, 3, 3 },
+			{  1, 1, 1, 2, 2, 2, 3, 3, 3 },
+			{  1, 1, 1, 2, 2, 2, 3, 3, 3 },
+			{  4, 4, 4, 5, 5, 5, 6, 6, 6 },
+			{  4, 4, 4, 5, 5, 5, 6, 6, 6 },
+			{  4, 4, 4, 5, 5, 5, 6, 6, 6 },
+			{  7, 7, 7, 8, 8, 8, 9, 9, 9 },
+			{  7, 7, 7, 8, 8, 8, 9, 9, 9 },
+			{  7, 7, 7, 8, 8, 8, 9, 9, 9 }, };
+	/** å½“å‰æ•°ç‹¬çš„çŸ©é˜µ */
+	private int[][] cur_table = new int[ROW][ROW+1];
+	/** è¡ŒçŠ¶æ€,ç¬¬xè¡Œçš„æ•°å­—yæ˜¯å¦å·²å¡« 0<=x<9,1<=y<=9*/
+	private boolean[][] row = new boolean[ROW][ROW+1];
+	/** åˆ—çŠ¶æ€,ç¬¬xåˆ—çš„æ•°å­—yæ˜¯å¦å·²å¡« 0<=x<9,1<=y<=9*/
+	private boolean[][] column = new boolean[ROW ][ROW+1];
+	/** å—çŠ¶æ€ ,ç¬¬xå—çš„æ•°å­—yæ˜¯å¦å·²å¡«,1<=x<=9,1<=y<=9*/
+	private boolean[][] block = new boolean[ROW+1][ROW+1];
+	/** æœªå¡«ç©ºæ ¼åˆ—è¡¨ */
 	private List<PendingNode> pendingNodes;
 
 	public Table(int[][] table) throws Exception {
 		cur_table = table;
-		// ³õÊ¼»¯
-		for (int i = 1; i <= ROW; i++)
-			for (int j = 1; j <= ROW; j++) {
+		// åˆå§‹åŒ–
+		for (int i = 0; i < ROW; i++)
+			for (int j = 0; j < ROW; j++) {
 				if (cur_table[i][j] != 0) {
 					int v = cur_table[i][j];
 					
 					if(getRow(i, v) || getColumn(j, v) || getBlock(getBlockId(i, j), v)){
-						throw new Exception("¹¹½¨Ê§°Ü:Êı¶À²»·ûºÏ¹æ¶¨");
+						throw new Exception("æ„å»ºå¤±è´¥:æ•°ç‹¬ä¸ç¬¦åˆè§„å®š");
 					}
 					setRow(i, v, true);
 					setColumn(j, v, true);
 					setBlock(getBlockId(i, j), v, true);
 				}
 			}
-		// Éú³ÉÎ´ÌîÁĞ±í
+		// ç”Ÿæˆæœªå¡«åˆ—è¡¨
 		List<PendingNode> tmpPenddingList = new ArrayList<PendingNode>();
-		for (int i = 1; i <= ROW; i++)
-			for (int j = 1; j <= ROW; j++) {
+		for (int i = 0; i < ROW; i++)
+			for (int j = 0; j < ROW; j++) {
 				if (cur_table[i][j] == 0) {
 					System.out.println("x= "+i+" y= "+j);
-					// ÇóÒ»¸öµãµÄ´ıÌîÊı
+					// æ±‚ä¸€ä¸ªç‚¹çš„å¾…å¡«æ•°
 					Map<Integer, Boolean> filled = new HashMap<Integer, Boolean>();
 
-					// ÇóĞĞÒÑÌîÊı
-					for (int k = 1; k <= ROW; k++)
+					// æ±‚è¡Œå·²å¡«æ•°
+					for (int k = 0; k < ROW; k++)
 						if (cur_table[k][j] != 0)
 							filled.put(cur_table[k][j], true);
-					// ÇóÁĞÒÑÌîÊı
-					for (int k = 1; k <= ROW; k++)
+					// æ±‚åˆ—å·²å¡«æ•°
+					for (int k = 0; k < ROW; k++)
 						if (cur_table[i][k] != 0)
 							filled.put(cur_table[i][k], true);
-					// ÇóÄ£¿éÒÑÌîÊı
+					// æ±‚æ¨¡å—å·²å¡«æ•°
 					for (int k = 1; k <= ROW; k++)
 						if (block[getBlockId(i, j)][k]) {
 							filled.put(k, true);
@@ -146,7 +145,7 @@ public class Table {
 	}
 
 	/**
-	 * ×ø±ê(x,y)
+	 * åæ ‡(x,y)
 	 * 
 	 * @param x
 	 * @param y
@@ -159,16 +158,16 @@ public class Table {
 		return pendingNodes;
 	}
 	/**
-	 * ´ıÌîµã 
+	 * å¾…å¡«ç‚¹ 
 	 * @author Jayin
 	 *
 	 */
 	class PendingNode {
-		/** ×ø±êx*/
+		/** åæ ‡x*/
 		private int x;
-		/** ×ø±êy*/
+		/** åæ ‡y*/
 		private int y;
-		/** ¿ÉÄÜÌîÉÏµÄÊı*/
+		/** å¯èƒ½å¡«ä¸Šçš„æ•°*/
 		private List<Integer> pendingList;
 
 		public PendingNode(int x, int y, List<Integer> pendingList) {
@@ -206,9 +205,4 @@ public class Table {
 					+ ", x=" + x + ", y=" + y + "]";
 		}
 	}
-
-	public static void main(String[] args) {
-
-	}
-
 }
