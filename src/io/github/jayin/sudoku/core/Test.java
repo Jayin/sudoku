@@ -36,25 +36,37 @@ public class Test {
 				System.out.println();
 			}
 			Sudoku s= new Sudoku(true);
-			s.init(cur_Matrix).solve();
-			System.out.println("-----OK-----");
-			int[][] _Matrix = s.getMatrix();
-			for (int i = 0; i < Table.ROW; i++) {
-				for (int j = 0; j < Table.ROW; j++) {
-					System.out.print(_Matrix[i][j] + " ");
+			try {
+				s.init(cur_Matrix).solve();
+				System.out.println("-----OK-----");
+				int[][] _Matrix = s.getMatrix();
+				for (int i = 0; i < Table.ROW; i++) {
+					for (int j = 0; j < Table.ROW; j++) {
+						System.out.print(_Matrix[i][j] + " ");
+					}
+					System.out.println();
 				}
-				System.out.println();
+				System.out.println("time : "+s.getCostTime()+"ms");
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			System.out.println("time : "+s.getCostTime()+"ms");
+			
 			
 			//pedding
-			Sudoku su= new Sudoku(true);
-			int position = 1;
-			PendingNode n   = s.init(cur_Matrix).getPendingNode(position/Table.ROW, position%Table.ROW);
-			if(n!=null){
-				List<Integer> numbers = n.getPendingList();
-				System.out.println(numbers.toString());
+			Sudoku su= new Sudoku(false);
+			int position = 2;
+			PendingNode n;
+			try {
+				n = su.init(cur_Matrix).getPendingNode(position/Table.ROW, position%Table.ROW);
+				if(n!=null){
+					List<Integer> numbers = n.getPendingList();
+					System.out.println(numbers.toString());
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+			
 			
 		} else {
 			System.out.println("not exist");
