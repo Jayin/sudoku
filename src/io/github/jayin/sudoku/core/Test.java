@@ -1,9 +1,12 @@
 package io.github.jayin.sudoku.core;
 
+import io.github.jayin.sudoku.core.Table.PendingNode;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 
 public class Test {
 	public static void main(String[] args) throws NumberFormatException,
@@ -32,7 +35,27 @@ public class Test {
 				}
 				System.out.println();
 			}
-			new Sudoku(true).init(cur_Matrix).solve();
+			Sudoku s= new Sudoku(true);
+			s.init(cur_Matrix).solve();
+			System.out.println("-----OK-----");
+			int[][] _Matrix = s.getMatrix();
+			for (int i = 0; i < Table.ROW; i++) {
+				for (int j = 0; j < Table.ROW; j++) {
+					System.out.print(_Matrix[i][j] + " ");
+				}
+				System.out.println();
+			}
+			System.out.println("time : "+s.getCostTime()+"ms");
+			
+			//pedding
+			Sudoku su= new Sudoku(true);
+			int position = 1;
+			PendingNode n   = s.init(cur_Matrix).getPendingNode(position/Table.ROW, position%Table.ROW);
+			if(n!=null){
+				List<Integer> numbers = n.getPendingList();
+				System.out.println(numbers.toString());
+			}
+			
 		} else {
 			System.out.println("not exist");
 		}
