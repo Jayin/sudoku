@@ -60,7 +60,6 @@ public class Table {
 		for (int i = 0; i < ROW; i++)
 			for (int j = 0; j < ROW; j++) {
 				if (cur_table[i][j] == 0) {
-					System.out.println("x= "+i+" y= "+j);
 					// 求一个点的待填数
 					Map<Integer, Boolean> filled = new HashMap<Integer, Boolean>();
 
@@ -93,10 +92,11 @@ public class Table {
 		Arrays.sort(nodes, new Comparator<PendingNode>() {
 
 			@Override public int compare(PendingNode o1, PendingNode o2) {
+				if(o1.getPendingList().size() == o2.getPendingList().size())
+					return 0;
 				if (o1.getPendingList().size() > o2.getPendingList().size())
 					return 1;
-				else
-					return -1;
+				return -1;
 			}
 		});
 		pendingNodes = (List<PendingNode>) Arrays.asList(nodes);
